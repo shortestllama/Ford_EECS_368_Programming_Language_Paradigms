@@ -1,0 +1,61 @@
+<!--
+EECS 368 Assignment 4
+Simple pie charts using canvas
+Inputs: none
+Outputs: Canvas tab with two pie charts
+Jack Ford
+10/17/2022
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pie Charts</title>
+    </head>
+    <body style="background-color:black">
+        <canvas width="1200" height="300"></canvas>
+        <script>
+            const results1 = [ //declare the first list of survey results
+                {name: "Satisfied", count: 927, color: "green"}, //define the values for this survey result
+                {name: "Neutral", count: 463, color: "yellow"}, //define the values for this survey result
+                {name: "Unsatisfied", count: 213, color: "red"}, //define the values for this survey result
+                {name: "No comment", count: 510, color: "silver"} //define the values for this survey result
+            ];
+            const results2 = [ //declare the second list of survey results
+                {name: "Very Happy", count: 104, color: "green"}, //define the values for this survey result
+                {name: "Happy", count: 63, color: "blue"}, //define the values for this survey result
+                {name: "Neutral", count: 87, color: "yellow"}, //define the values for this survey result
+                {name: "Unhappy", count: 51, color: "orange"}, //define the values for this survey result
+                {name: "Very Unhappy", count: 26, color: "red"}, //define the values for this survey result
+                {name: "No comment", count: 18, color: "silver"} //define the values for this survey result
+            ]
+            const draw = (results, i) => { //declare the draw method
+                let cx = document.querySelector("canvas").getContext("2d"); //declare the canvas drawing variable
+                let total = results.reduce((sum, {count}) => sum + count, 0); //define the total number of survey results
+                let currentAngle = -0.5 * Math.PI; //set the initial angle to -pi/2
+                let centerX = i ? 200 : 600, centerY = 150; //define the initial starting values for the center
+                let j = 0; //initialize the index for the list
+
+                for (let result of results) { //loop through all the values in the list
+                    let sliceAngle = (result.count / total) * 2 * Math.PI; //set the angle that the given slice takes up
+                    cx.beginPath(); //begin drawing
+                    cx.arc(centerX, centerY, 100, currentAngle, currentAngle + sliceAngle); //draw an arc aruond the given parameters
+                    let middleAngle = currentAngle + 0.5 * sliceAngle; //find the bisection of the slice
+                    let textX = Math.cos(middleAngle) * 120 + centerX; //find the x value for the text
+                    let textY = Math.sin(middleAngle) * 120 + centerY; //find the y value for the text
+                    cx.font = "12px Arial"; //set the text font to 12 arial
+                    cx.textBaseline = "middle"; //set the baseline to the middle
+                    cx.fillStyle = results[j].color; //set the color to the color of the result
+                    cx.textAlign = Math.cos(middleAngle) > 0 ? "left" : "right"; //align the text to the left if it's on the right or the right if it's on the left
+                    cx.fillText(result.name, textX, textY); //put the name of the result at the x and y values of the text
+                    currentAngle += sliceAngle; //set the beginning of the next angle to the end of the previous angle
+                    cx.lineTo(centerX, centerY); //draw a line to the center of the circle
+                    cx.fill(); //fill the arc
+                    j++; //increment the variable that keeps track of the index of the list
+                }
+                j = 0; //reset the variable of the index of the list
+            }
+            draw(results1, true); //call the draw function on the first result list
+            draw(results2, false); //call the draw function on the second result list
+        </script>
+    </body>
+</html>

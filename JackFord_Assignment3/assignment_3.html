@@ -1,0 +1,73 @@
+<!--
+EECS 368 Assignment 3
+Simple tabbed interface using JavaScript and HTML
+Inputs: none
+Outputs: Browser window with 3 tabs and text
+Jack Ford
+10/03/2022
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ford's Jayhawk Page</title>
+    </head>
+    <body>
+        <tab-panel>
+            <div data-tabname="Rock">Rock...</div>
+            <div data-tabname="Chalk">Rock Chalk...</div>
+            <div data-tabname="Jayhawk">Rock Chalk Jayhawk - Go KU!</div>
+        </tab-panel>
+        <script>
+            /*
+            function that takes the node and turns each of
+            the children into a tab
+            */
+            function asTabs(node) { //initializes the function asTabs
+                let tabs = Array.from(node.children); //creates an array of the children of the given node
+                let buttons = []; //initializes a list for the buttons
+
+                for (let i = 0; i < 3; i++) { //loops 3 times
+                    buttons.push(document.createElement("button")); //creates an html button element and adds it to the buttons array
+                }
+
+                for (let i = 0; i < tabs.length; i++) { //loops through all of the children of the node
+                    buttons[i].textContent = tabs[i].getAttribute("data-tabname"); //assigns the nodes' children's data-tabname attribute to each respective button
+                }
+
+                for (let i = 0; i < buttons.length; i++) { //loops through all the buttons
+                    node.insertBefore(buttons[i], tabs[0]); //inserts the buttons into the node before the nodes current children, so that the tab buttons are above the content of the tabs
+                }
+
+                for (let i = 0; i < buttons.length; i++) { //loops through all the buttons
+                    buttons[i].addEventListener("click", () => clicked(buttons[i])); //checks to see if a button has been clicked and if so, calls the function that changes the tab
+                }
+
+                /*
+                function that takes in a button that was clicked and changes the
+                content of the page to display the content of the tab that the
+                button was assigned to as well as changes the colors of the
+                buttons to red for the button that was clicked and blue for the
+                other two
+                */
+                function clicked(button) { //initializes the function clicked
+                    for (let i = 0; i < buttons.length; i++) { //loops through all the buttons
+                        if (buttons[i] == button) { //checks to see if the current button in the list being looked at is the same as the button that was clicked
+                            tabs[i].style.display = ""; //displays the content of the tab
+                            buttons[i].style.color = "red"; //changes the color of the button to red
+                        }
+
+                        else { //if the button is not the same as the one that was clicked
+                            tabs[i].style.display = "None"; //does not display this tab's content
+                            buttons[i].style.color = "blue"; //changes the color of this tab to blue
+                        }
+                    }
+                }
+
+                clicked(buttons[0]); //calls clicked on the first button so that the first tab is open when you run the program
+            }
+
+            asTabs(document.querySelector("tab-panel")); //calls the asTabs function on the tab-panel node to change the children of the node to tabs and buttons
+            
+        </script>
+    </body>
+</html>
